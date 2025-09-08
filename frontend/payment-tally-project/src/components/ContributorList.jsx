@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import { FetchContributors } from '../services/ContributorService'
 
 const ContributorList = () => {
@@ -6,7 +6,7 @@ const ContributorList = () => {
   const [contributorList, setContributorList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [payModalIsOpen, setPayModalIsOpen] = useState(false);
-  const [payButton, setPayButton] = useState("Pay")
+  const [payModalId, setPayModalId] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -26,21 +26,26 @@ const ContributorList = () => {
 
   const listContributor = contributorList.map(contributor => 
   <div key={contributor.id} className='relative p-4 shadow rounded-xl m-2'>
-    <h3>{contributor.first_name + ' ' + contributor.last_name}</h3>
+    <h3 className='font-semibold'>{contributor.first_name + ' ' + contributor.last_name}</h3>
     <div className='flex gap-2 text-2xl font-semibold'>
-      <h1>Balance: 0</h1>
-      <h1>Due: 20</h1>
+      {
+        contributor.balance >= 0 ? <h1>Balance: <strong className='text-green-700 font-semibold'>{contributor.balance}</strong></h1> : 
+                                    <h1>Due: <strong className='text-red-600 font-semibold'>{contributor.balance}</strong></h1>
+      }
     </div>
     <div className='mt-4 w-min ml-auto flex gap-2'>
       <button className='py-1 px-4 bg-orange-400 rounded-full font-semibold text-white'>Details</button>
-      <button onClick={() => handleSetModalIsOpen(contributor.id)} className='py-1 px-4 bg-green-400 rounded-full font-semibold text-white'>{payButton}</button>
+      <button onClick={() => handleSetModalIsOpen(contributor.id)} className='py-1 px-4 bg-green-400 rounded-full font-semibold text-white'>Pay</button>
     </div>
 
     {/* Pop-up */}
     {
-      (payModalIsOpen && <h1 className='absolute left-full ml-2 top-0 p-4 bg-white outline-1'>
-        <input type='text'></input>
-        <button>Submit Pay</button>
+      (payModalId === contributor.id && <h1 className='absolute top-full mt-2 sm:left-full sm:ml-2 sm:top-0 p-4 shadow rounded-xl h-full bg-white duration-150 flex flex-col z-20'>
+        <input type='text' className='border-b-2 border-gray-600' placeholder='Set amount'></input>
+        <button className='mt-auto py-1 px-4 bg-green-400 rounded-full font-semibold text-white'>Submit Pay</button>
+        <button className='rounded-full bg-red-600 font-semibold text-white absolute left-full ml-2 top-0 aspect-square w-6 h-6 cursor-pointer'
+                onClick={() => setPayModalId(null)}
+                            >X</button>
       </h1>)
     }
   </div>)
@@ -49,18 +54,9 @@ const ContributorList = () => {
     fetchData();
   }, []);
 
-  const handleSetModalIsOpen = () => {
+  const handleSetModalIsOpen = (id) => {
     setPayModalIsOpen(!payModalIsOpen)
-
-    handleSetPayButton()
-  }
-
-  const handleSetPayButton = () => {
-    if (!payModalIsOpen) {
-      setPayButton("Close")
-    } else {
-      setPayButton("Pay")
-    }
+    setPayModalId(id)
   }
 
   return (
