@@ -6,17 +6,14 @@ class Contributors(models.Model):
     last_name = models.CharField(max_length=50)
     balance = models.IntegerField(default=0)
 
-
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
 
 class Contributions(models.Model):
-    contributor = models.ForeignKey(Contributors, on_delete=models.CASCADE, related_name='contributions')
+    contributor = models.ForeignKey(Contributors, on_delete=models.CASCADE, related_name='contributor')
     payment = models.IntegerField()
-    is_paid = models.BooleanField(default=False)
-    date_required = models.DateField(auto_now_add=True)
-    date_paid = models.DateField()
+    date_paid = models.DateField(auto_now_add=True)
 
 class TotalBalance(models.Model):
     balance_amount = models.IntegerField()

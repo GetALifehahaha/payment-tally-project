@@ -1,0 +1,3 @@
+djangorestframework
+django-cors-headers
+# celery redis django-celery-beat

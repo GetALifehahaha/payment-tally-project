@@ -10,7 +10,7 @@ class ContributorsViewSet(viewsets.ModelViewSet):
 
 
 class ContributionsViewSet(viewsets.ModelViewSet):
-    queryset = Contributions.objects.all().order_by('-date_required')
+    queryset = Contributions.objects.all().order_by('-date_paid')
     serializer_class = ContributionsSerializer
 
 
