@@ -16,6 +16,16 @@ class Contributions(models.Model):
     date_required = models.DateField(auto_now_add=True)
     date_paid = models.DateField()
 
+class TotalBalance(models.Model):
+    balance_amount = models.IntegerField()
+
+
+class DeductionHistory(models.Model):
+    balance = models.ForeignKey(TotalBalance, on_delete=models.CASCADE, related_name="balance")
+
+    amount = models.IntegerField()
+    deduction_date = models.DateField(auto_now_add=True)
+
 
 # class Balance(models.Model):
 #     balance = models.IntegerField()
