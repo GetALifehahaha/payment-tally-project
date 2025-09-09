@@ -5,12 +5,16 @@ from .serializers import ContributorsSerializer, ContributionsSerializer, TotalB
 
 # Create your views here.
 class ContributorsViewSet(viewsets.ModelViewSet):
-    queryset = Contributors.objects.all()
     serializer_class = ContributorsSerializer
+
+    def get_queryset(self):
+        queryset = Contributors.objects.all()
+        contributor_id = self.request
+        
 
 
 class ContributionsViewSet(viewsets.ModelViewSet):
-    queryset = Contributions.objects.all().order_by('-date_paid')
+    queryset = Contributions.objects.all().order_by('-id')
     serializer_class = ContributionsSerializer
 
 
